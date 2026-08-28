@@ -1,0 +1,7 @@
+# Text files keep LF line endings, on Windows too (core.autocrlf=true).
+# The tests compare the page byte for byte, and a converted ending would
+# change the checksum the comparison stands on.
+* text=auto eol=lf
+
+# The icon is binary - git has nothing to convert in it.
+*.ico binary

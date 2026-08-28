@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chipbook"
+version = "26"
+description = "A local catalogue of CNC jobs: the files stay on disk, the catalogue makes them findable."
+requires-python = ">=3.9"
+keywords = ["cnc", "catalogue", "sqlite", "full-text-search", "setup-sheet"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Database :: Front-Ends",
+    "Topic :: Manufacturing",
+    "Environment :: Web Environment",
+    "Intended Audience :: Manufacturing",
+]
+
+# NO RUNTIME DEPENDENCIES, AND THAT IS DELIBERATE. The catalogue, the
+# search, the PDF reader and the server all run on the standard library
+# alone, so the program starts on a workshop computer where nobody is
+# going to install anything.
+dependencies = []
+
+[project.optional-dependencies]
+# Only needed to reach the catalogue from a phone over HTTPS: the program
+# issues its own certificate. Without it everything else works, and the
+# program says so instead of failing.
+phone = ["cryptography>=41"]
+
+[project.scripts]
+chipbook = "chipbook.server:main"
+
+[project.urls]
+Source = "https://github.com/remigiuszdabrowski104-png/chipbook"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+# The page and the icon are part of the program, not extras: without them
+# the server has nothing to serve. The model instruction is a plain file
+# on purpose - it can be corrected without touching the code.
+chipbook = ["web/*", "ai/prompt.txt"]

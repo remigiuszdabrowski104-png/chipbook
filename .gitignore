@@ -1,0 +1,26 @@
+# built and working directories
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+
+# THE USER'S DATABASE NEVER ENTERS THE REPOSITORY.
+*.db
+*.db-wal
+*.db-shm
+
+# REAL SETUP SHEETS NEVER ENTER THE REPOSITORY either. They carry the
+# customer's name, disk paths and a CAM licence number. The stand-ins the
+# tests work on are built inside the test code as bytes, not as files, so
+# this rule does not touch them. Should a stand-in file ever be needed,
+# add an exception line here, for example  !tests/data/sample.pdf
+*.pdf
+*.xml
+
+# system litter
+Thumbs.db
+desktop.ini
+.DS_Store

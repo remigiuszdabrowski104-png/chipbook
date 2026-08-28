@@ -27,6 +27,11 @@ of any entry. It is inside an attached Mastercam setup sheet, which
 chipbook has read and indexed. Clicking the hit opens the job with that
 sheet broken out into stock, machine, operations and tools.*
 
+**[Try it in your browser, without downloading anything](https://remigiuszdabrowski104-png.github.io/chipbook/)** — the real
+window, running on invented jobs. Search, open an entry, read a setup
+sheet broken out of the attached file. Saving, the phone road and the
+model need the program itself, and the page says so rather than pretending.
+
 **Built for one shop floor, not for a portfolio.** It was written for a
 CNC programmer on a Windows laptop, with a phone as a second screen at the
 machine. Every awkward decision in here — the fixed port, the typo

@@ -1,0 +1,50 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# WINDOWS, AND THAT IS NOT AN OVERSIGHT. chipbook is written for a shop
+# floor computer: it puts a deleted job folder into the Windows Recycle Bin
+# through the shell API, it opens files with os.startfile, and it ships a
+# .ico for the desktop shortcut. Those paths are guarded so the rest runs
+# anywhere, but Windows is where the program is actually used - so that is
+# where the suite is measured.
+jobs:
+  tests:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      # The search stands on SQLite's FTS5 with the trigram tokenizer
+      # (SQLite 3.34 or newer). Printing the version here means a failure
+      # further down can be read at a glance instead of guessed at.
+      - name: Show what SQLite this Python carries
+        run: |
+          python -c "import sqlite3, sys; print('Python', sys.version); print('SQLite', sqlite3.sqlite_version)"
+
+      # WITH THE "phone" EXTRA, AND THAT IS NOT A DETAIL. The entrance for
+      # the phone stands on a self-issued certificate, and issuing one needs
+      # `cryptography`. Installed without the extra, 22 tests of that road
+      # step aside - so the road that carries the user's data over the
+      # network would never be measured here. Measured before this line was
+      # written: `pip install -e .` alone gave 8 failures and 14 errors,
+      # every one of them a missing library.
+      - name: Install
+        run: python -m pip install --disable-pip-version-check -e ".[phone]"
+
+      # No third-party test runner: the suite is plain unittest, the same
+      # way it runs on a developer's machine.
+      - name: Run the tests
+        run: python -m unittest discover -s tests -p "test_*.py" -v

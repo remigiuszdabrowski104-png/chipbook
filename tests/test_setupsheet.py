@@ -159,12 +159,12 @@ class PdfReaderOnFixturesTest(unittest.TestCase):
     def test_a_file_that_is_not_a_pdf(self):
         path = write_file(self.directory, "pretends.pdf", b"this is not a pdf")
         result = setupsheet.describe(path, "pretend.pdf")
-        self.assertEqual(result["kind"], "error_message")
+        self.assertEqual(result["kind"], "error")
         self.assertIn("is not a PDF", result["notice"])
 
     def test_a_pdf_with_no_text_says_so_outright(self):
         result = self._describe(b"0 0 1 rg 10 10 100 100 re f\n")
-        self.assertEqual(result["kind"], "error_message")
+        self.assertEqual(result["kind"], "error")
         self.assertIn("no text to show", result["notice"])
 
     def test_a_truncated_stream_does_not_topple_the_program(self):
@@ -173,7 +173,7 @@ class PdfReaderOnFixturesTest(unittest.TestCase):
         truncated = whole[:where + 5] + b"\nendstream endobj\n%%EOF\n"
         path = write_file(self.directory, "truncated.pdf", truncated)
         result = setupsheet.describe(path, "truncated.pdf")
-        self.assertIn(result["kind"], ("pdf", "error_message"))
+        self.assertIn(result["kind"], ("pdf", "error"))
 
     def test_a_pdf_that_is_too_large_is_not_parsed(self):
         content = b"BT\n" + run(73, 700, "STOCK") + b"ET\n"
@@ -520,7 +520,7 @@ class AsTextForModelTest(unittest.TestCase):
 
     def test_a_description_with_no_blocks_is_empty_text_not_a_failure(self):
         self.assertEqual(setupsheet.as_text({}), "")
-        self.assertEqual(setupsheet.as_text({"kind": "error_message"}), "")
+        self.assertEqual(setupsheet.as_text({"kind": "error"}), "")
 
 
 class RepeatedToolSectionTest(unittest.TestCase):

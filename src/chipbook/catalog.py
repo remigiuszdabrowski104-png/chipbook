@@ -1108,7 +1108,7 @@ class Catalog:
         try:
             answer = conversation(question, given)
         except ai.ModelError as error:
-            return Answer("error_message", str(error), result=result)
+            return Answer("error", str(error), result=result)
 
         # TWO ANSWER SHAPES, ONE CODE PATH. Asked with a form, the
         # model returns a dict with two fields. Test doubles and the
@@ -1136,7 +1136,7 @@ class Catalog:
             try:
                 second = conversation(question + FOLLOW_UP_WARNING, given)
             except ai.ModelError as error:
-                return Answer("error_message", str(error), result=result)
+                return Answer("error", str(error), result=result)
             if isinstance(second, dict):
                 text = str(second.get("answer") or "").strip()
                 source = str(second.get("source") or "").strip()

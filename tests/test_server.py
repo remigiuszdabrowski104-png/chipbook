@@ -1153,7 +1153,7 @@ class ServerTest(unittest.TestCase):
         _, answer = self._send_file(w["id"], "broken.xml", b"<SetupSheet><Job></SetupSheet>")
         code, p = self.json_request("/api/files/%d/preview" % answer["attachment"]["id"])
         self.assertEqual(code, 200)
-        self.assertEqual(p["kind"], "error_message")
+        self.assertEqual(p["kind"], "error")
         self.assertIn("XML", p["notice"])
 
     def test_a_binary_file_is_just_kept(self):
@@ -1256,7 +1256,7 @@ class AskAiTest(unittest.TestCase):
         code, data = self.json_request("/api/ask",
                                       {"question": "extra hole"})
         self.assertEqual(code, 200)
-        self.assertEqual(data["kind"], "error_message")
+        self.assertEqual(data["kind"], "error")
         self.assertIn("Ollama", data["text"])
 
     def test_clarifications_reach_the_engine(self):

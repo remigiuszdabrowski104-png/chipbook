@@ -323,7 +323,7 @@ function previewHtml(z, withTitle){
   }
   return '<div class="file-preview">' +
     (withTitle ? '<h3 class="section-title">From the file ' + esc(p.name) + '</h3>' : '') +
-    (p.notice && p.kind !== "error_message" && p.kind !== "too_big"
+    (p.notice && p.kind !== "error" && p.kind !== "too_big"
        ? '<div class="preview-notice">' + esc(p.notice) + '</div>' : '') +
     middle + '</div>';
 }
@@ -331,7 +331,7 @@ function previewHtml(z, withTitle){
 async function loadPreview(id){
   if (state.previews[id]) return;
   try{ state.previews[id] = await api("/api/files/" + id + "/preview"); }
-  catch(e){ state.previews[id] = {kind:"error_message", name:"", notice:e.message}; }
+  catch(e){ state.previews[id] = {kind:"error", name:"", notice:e.message}; }
 }
 
 async function loadMainPreviews(w){

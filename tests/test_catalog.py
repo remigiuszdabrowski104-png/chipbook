@@ -1081,7 +1081,7 @@ class ModelQueryTest(unittest.TestCase):
             raise ai.ModelError("Ollama is not running.")
 
         answer = self.catalog.ask("drilled hole", conversation=falls_over)
-        self.assertEqual(answer.kind, "error_message")
+        self.assertEqual(answer.kind, "error")
         self.assertIn("Ollama", answer.text)
         self.assertEqual(len(answer.jobs), 1)
 

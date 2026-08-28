@@ -28,15 +28,15 @@ from .prompt import NOT_IN_CATALOG, PROMPT, PROMPT_FILE, load_prompt
 class Answer:
     """An answer to a question put to the ai.
 
-    `kind` says which of the three cases occurred, and the UI is expected
+    `kind` says which of the four cases occurred, and the UI is expected
     to present each differently:
-      "none"  - the search found nothing, THE MODEL WAS NOT ASKED;
-      "one"   - a single candidate: an answer and one link;
-      "many"  - several candidates. THE MODEL IS NOT ASKED AT ALL; the
-                sentence is assembled by the UI, and `candidates` carries
-                the concrete values by which the jobs differ;
-      "error" - the model did not answer (for example Ollama is not
-                running).
+      "none"    - the search found nothing, THE MODEL WAS NOT ASKED;
+      "one"     - a single candidate: an answer and one link;
+      "several" - several candidates. THE MODEL IS NOT ASKED AT ALL; the
+                  sentence is assembled by the UI, and `candidates` carries
+                  the concrete values by which the jobs differ;
+      "error"   - the model did not answer (for example Ollama is not
+                  running).
 
     `jobs` DO NOT COME from the model - they are the search candidates. The
     model has no way to point at a job it was not given, and no way to

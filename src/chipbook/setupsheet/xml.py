@@ -23,11 +23,11 @@ def _describe_xml(path, name):
             raw = file.read()
         root = ET.fromstring(raw)
     except ET.ParseError as error:
-        return {"kind": "error_message", "name": name,
+        return {"kind": "error", "name": name,
                 "notice": "This is not valid XML (%s). The attachment "
                          "is kept untouched - open it with the button." % error}
     except (OSError, ValueError) as error:
-        return {"kind": "error_message", "name": name,
+        return {"kind": "error", "name": name,
                 "notice": "Could not read the file: " + str(error)}
 
     state = {"counter": 0, "truncated": False}

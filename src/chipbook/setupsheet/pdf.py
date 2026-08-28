@@ -52,11 +52,11 @@ def _describe_pdf(path, name):
         with open(path, "rb") as file:
             raw = file.read()
     except OSError as error:
-        return {"kind": "error_message", "name": name,
+        return {"kind": "error", "name": name,
                 "notice": "Could not read the file: " + str(error)}
 
     if not raw.startswith(b"%PDF"):
-        return {"kind": "error_message", "name": name,
+        return {"kind": "error", "name": name,
                 "notice": "This is not a PDF. The attachment is kept untouched "
                          "- open it with the button."}
 
@@ -64,7 +64,7 @@ def _describe_pdf(path, name):
     try:
         pages = _pdf_pages(raw, state)
     except Exception as error:              # a readable message, not a failure
-        return {"kind": "error_message", "name": name,
+        return {"kind": "error", "name": name,
                 "notice": "This PDF cannot be broken out (%s). The attachment "
                          "is kept untouched - open it with the button."
                          % error}
@@ -77,7 +77,7 @@ def _describe_pdf(path, name):
     blocks = _pdf_order(blocks)
 
     if not blocks:
-        return {"kind": "error_message", "name": name,
+        return {"kind": "error", "name": name,
                 "notice": "There is no text to show in this PDF - it may "
                          "be a scan or a drawing only. Open it with the button."}
 

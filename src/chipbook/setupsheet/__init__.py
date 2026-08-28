@@ -78,7 +78,7 @@ def describe(path, name=None):
     try:
         size_bytes = os.path.getsize(path)
     except OSError as error:
-        return {"kind": "error_message", "name": name,
+        return {"kind": "error", "name": name,
                 "notice": "Cannot read this file: " + str(error)}
 
     if ext in XML_EXTENSIONS:
@@ -122,7 +122,7 @@ def _describe_text(path, name):
         with open(path, "rb") as file:
             raw = file.read()
     except OSError as error:
-        return {"kind": "error_message", "name": name,
+        return {"kind": "error", "name": name,
                 "notice": "Could not read the file: " + str(error)}
 
     content = raw.decode("utf-8", "replace")

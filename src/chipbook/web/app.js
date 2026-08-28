@@ -905,7 +905,7 @@ function drawForm(el){
   el.innerHTML =
     '<div class="heading-panel"><h2>New entry</h2></div>' +
     '<div class="content"><div class="content-narrow">' +
-      '<div id="error_message-form" hidden></div>' +
+      '<div id="form-error" hidden></div>' +
       '<div class="form-row">' +
         '<div class="group"><label for="f-name">Name<span class="star">*</span></label>' +
           '<input type="text" id="f-name" autocomplete="off" value="' + esc(s.name) + '"></div>' +
@@ -972,10 +972,10 @@ function drawForm(el){
 }
 
 function formError(msg){
-  const el = document.getElementById("error_message-form");
+  const el = document.getElementById("form-error");
   if (!el) return;
   el.hidden = false;
-  el.className = "error_message-form-field";
+  el.className = "form-error-box";
   el.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><span>' + esc(msg) + '</span>';
 }
 
@@ -1726,7 +1726,7 @@ async function passGate(){
 
 document.getElementById("gate-ok").addEventListener("click", async () => {
   const field = document.getElementById("gate-code");
-  const gateError = document.getElementById("gate-error_message");
+  const gateError = document.getElementById("gate-error");
   const typedCode = field.value.trim();
   gateError.textContent = "";
   try{
@@ -1960,7 +1960,7 @@ function noLaptopScreen(withLaptop){
   const top = document.createElement("header");
   top.className = "off-bar";
   top.innerHTML =
-    '<div class="off-brand"><span class="off-idempotency_key"></span>chipbook' +
+    '<div class="off-brand"><span class="off-logo"></span>chipbook' +
       '<span class="version-small">v' + WINDOW_VERSION + '</span></div>' +
     '<div class="off-dimmed">' +
       '<div class="off-search">Search by material, tool...</div>' +
@@ -2044,7 +2044,7 @@ function noLaptopScreen(withLaptop){
     list.innerHTML = chosenFiles.map((file, i) => {
       const video = (file.type || "").startsWith("video");
       const index = video ? ++videos : ++photos;
-      let preview = '<span class="off-file-idempotency_key">video</span>';
+      let preview = '<span class="off-file-badge">video</span>';
       if (!video){
         const address = URL.createObjectURL(file);
         previews.push(address);
@@ -2202,7 +2202,7 @@ function errorScreen(error){
   const description = (error && error.stack) ? error.stack
              : (error && error.message) ? error.message : String(error);
   const el = document.createElement("div");
-  el.id = "error_message-start";
+  el.id = "startup-error";
   el.innerHTML = "<h2>chipbook did not start</h2><p>window version " +
     WINDOW_VERSION + "</p><pre></pre>" +
     "<p>Send this text on - it says what happened.</p>";

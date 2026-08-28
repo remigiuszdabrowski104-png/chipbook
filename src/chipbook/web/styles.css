@@ -466,7 +466,7 @@ wrote beyond the answer. */
   cursor:pointer;text-decoration:underline;font-family:inherit;
 }
 .answer-ai.empty{background:#f6f7f9;border-color:var(--border-strong);color:var(--faint)}
-.answer-ai.error_message{background:#fdf1ef;border-color:#e7c3bd;color:#7d2b20}
+.answer-ai.error{background:#fdf1ef;border-color:#e7c3bd;color:#7d2b20}
 .answer-ai.waiting{color:var(--faint)}
 
 /* ---------------------------------------------------------- empty-state */
@@ -527,7 +527,7 @@ input[type=text]:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 
   padding-top:18px;border-top:1px solid var(--border);
 }
 .bar-actions .spacer{margin-left:auto}
-.error_message-form-field{
+.form-error-box{
   display:flex;gap:8px;align-items:flex-start;margin-bottom:16px;padding:10px 12px;
   border-radius:8px;background:var(--red-bg);border:1px solid #fbd0cb;
   color:var(--red);font-size:13px;
@@ -701,7 +701,7 @@ length 32 while the browser was still asking for the code. */
   background:var(--accent);color:#fff;font:inherit;font-weight:600;
   font-size:16px;cursor:pointer;
 }
-.gate-error_message{margin-top:14px;color:#ff9d7a;font-size:13.5px;min-height:20px}
+.gate-error{margin-top:14px;color:#ff9d7a;font-size:13.5px;min-height:20px}
 
 /* ------------------------------------------------------------ the phone
 A CORRECTION TO WHAT I WROTE MYSELF: I said the file has not one rule for
@@ -784,7 +784,7 @@ The colours are the same as in chipbook, but set here outright. */
 #offline-screen .off-bar{background:#13161b;padding:12px 14px}
 #offline-screen .off-brand{display:flex;align-items:center;gap:9px;
   color:#fff;font-size:19px;font-weight:600;margin-bottom:10px}
-#offline-screen .off-idempotency_key{width:24px;height:24px;border-radius:6px;
+#offline-screen .off-logo{width:24px;height:24px;border-radius:6px;
   background:#d8541f;display:inline-block;flex:none}
 #offline-screen .off-dimmed{opacity:.35;pointer-events:none}
 #offline-screen .off-search{background:#20242b;color:#8a9099;font-size:14px;
@@ -882,10 +882,10 @@ not look like a fault. */
 #off-new-on-phone{transition:opacity .18s,transform .18s}
 body[data-scrolling="1"] #off-new-on-phone{
   opacity:0;transform:translateY(14px);pointer-events:none}
-#error_message-start{position:fixed;inset:0;z-index:10001;overflow:auto;padding:18px;
+#startup-error{position:fixed;inset:0;z-index:10001;overflow:auto;padding:18px;
   background:#2a1414;color:#ffdede;font:14px/1.45 sans-serif}
-#error_message-start h2{margin:0 0 8px;font-size:19px}
-#error_message-start pre{white-space:pre-wrap;word-break:break-word;font-size:12px;
+#startup-error h2{margin:0 0 8px;font-size:19px}
+#startup-error pre{white-space:pre-wrap;word-break:break-word;font-size:12px;
   background:#000;padding:10px;border-radius:6px}
 /* THE VERSION NUMBER BY THE LOGO. It replaces the green status box, which
 was ordered deleted. Something has to stay: with no number on screen "it
@@ -922,7 +922,7 @@ not by the name "photo 2". */
   border-top:1px solid #2a2f37;padding:8px 0}
 #offline-screen .off-file-preview{width:46px;height:46px;object-fit:cover;
   border-radius:6px;background:#000;flex:0 0 auto}
-#offline-screen .off-file-idempotency_key{width:46px;height:46px;border-radius:6px;
+#offline-screen .off-file-badge{width:46px;height:46px;border-radius:6px;
   background:#2a2f37;color:#9aa0a6;font-size:11px;display:flex;
   align-items:center;justify-content:center;flex:0 0 auto}
 #offline-screen .off-file-desc{flex:1 1 auto;min-width:0;font-size:14px}

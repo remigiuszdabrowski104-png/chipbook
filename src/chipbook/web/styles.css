@@ -349,6 +349,14 @@ once, and neither is an ordinary white sheet of paper. */
   border-bottom-left-radius:3px;
 }
 .answer-ai .bubble.waiting{color:var(--faint);font-style:italic;background:transparent;border:0;padding-left:0}
+/* A FAILURE IS NOT AN ANSWER AND THE WINDOW HAS TO SAY SO. These are the
+colours the answer field carried for this same purpose back when there was
+one answer instead of a conversation - the rule sat on the container, where
+it could never fire, because a conversation is not one answer. It belongs
+on the turn that failed, the way the waiting state above already does. */
+.answer-ai .bubble.failed{
+  background:#fdf1ef;border:1px solid #e7c3bd;color:#7d2b20;
+}
 
 /* THE "TALKING ABOUT:" BAR. It says WHICH job further questions go to.
 WHITE AND NOT IN THE ACCENT COLOUR, and that is not a matter of taste -
@@ -466,7 +474,6 @@ wrote beyond the answer. */
   cursor:pointer;text-decoration:underline;font-family:inherit;
 }
 .answer-ai.empty{background:#f6f7f9;border-color:var(--border-strong);color:var(--faint)}
-.answer-ai.error{background:#fdf1ef;border-color:#e7c3bd;color:#7d2b20}
 .answer-ai.waiting{color:var(--faint)}
 
 /* ---------------------------------------------------------- empty-state */

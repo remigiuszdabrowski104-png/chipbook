@@ -1318,6 +1318,10 @@ function drawConversation(note){
   el.hidden = false;
   el.className = "answer-ai conversation";
   const caption = {me: "Your message", ai: "chipbook"};
+  // A FAILURE SAYS SO IN WORDS AND NOT ONLY IN COLOUR. Colour alone is a
+  // weak sign: on a phone held in daylight, and for anybody who does not
+  // see this red as red, it is no sign at all.
+  const FAILED_CAPTION = "chipbook could not answer";
   // HOW MANY CHARACTERS OF AN ANSWER WE SHOW BEFORE FOLDING IT.
   // A model can write a lecture despite the form. What is to stay on screen
   // is what the person asked about, and the rest one click away. 160
@@ -1326,13 +1330,18 @@ function drawConversation(note){
   const LONG_ANSWER_LIMIT = 160;
   el.innerHTML = state.conversation.map((w, index) => {
     const whole = String(w.msg || "");
-    const isLong = w.who === "ai" && !w.expanded
+    // A FAILURE IS NEVER FOLDED. Measured: the message about the model
+    // being out of reach is longer than the limit, so the one thing a
+    // person has to read whole was the one thing being cut in half.
+    const isLong = w.who === "ai" && !w.expanded && !w.failed
                   && whole.length > LONG_ANSWER_LIMIT;
     const content = isLong
       ? whole.slice(0, LONG_ANSWER_LIMIT).trim() + "\u2026" : whole;
     return '<span class="turn ' + w.who + '">' +
-      '<span class="who">' + caption[w.who] + "</span>" +
-      '<span class="bubble ' + w.who + '">' + esc(content) +
+      '<span class="who">' +
+        (w.failed ? FAILED_CAPTION : caption[w.who]) + "</span>" +
+      '<span class="bubble ' + w.who + (w.failed ? " failed" : "") +
+        '">' + esc(content) +
       (isLong
         ? '<button type="button" class="more" data-index="' + index +
           '">show the full answer</button>' : "") +
@@ -1368,6 +1377,21 @@ function showChatField(show){
 function waitingBubble(msg){
   return '<span class="turn ai"><span class="bubble ai waiting">' +
          esc(msg) + "</span></span>";
+}
+
+/* EVERY FAILURE ENTERS THE CONVERSATION THROUGH HERE, and that is the whole
+reason this function exists.
+MEASURED ON A RUNNING PROGRAM, with the model pointed at a dead port: a
+failure used to arrive as an ordinary turn from chipbook - the same class,
+the same colour and the same caption as an answer - so an outage read as
+something chipbook had said. It was the same fault as an error message
+leaking into the window as an answer, only quieter, because nothing was
+broken and every test was green.
+A third place that reports a failure cannot be added without passing this
+line. */
+function pushFailure(text){
+  state.conversation.push({who: "ai", failed: true,
+                           msg: String(text || "")});
 }
 
 function conversationField(){
@@ -1456,6 +1480,10 @@ async function askAI(jobId){
     }
     if (data.kind === "none"){
       state.conversation.push({who:"ai", msg: "I do not have this in the database."});
+    } else if (data.kind === "error"){
+      // THE MODEL DID NOT ANSWER. That is not an answer and must not look
+      // like one - see pushFailure.
+      pushFailure(data.text);
     } else {
       state.conversation.push({who:"ai", msg: data.text,
                          source: data.source || "",
@@ -1484,7 +1512,7 @@ async function askAI(jobId){
     showChatField(true);
     drawConversation("");
   }catch(e){
-    state.conversation.push({who:"ai", msg: e.message});
+    pushFailure(e.message);
     showChatField(true);
     drawConversation("");
   }

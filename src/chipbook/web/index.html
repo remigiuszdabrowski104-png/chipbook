@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>chipbook</title>
+<!-- The icon in the browser tab. The same file as the desktop shortcut
+icon, served by the server - one source, so that two images of the same
+program never drift apart. -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<!-- THE ICON ON THE PHONE HOME SCREEN.
+An iPhone does not read .ico and without this one line shows A SCREENSHOT
+OF THE PAGE instead of the mark. Android takes the icon from the
+description file below. Both point at the same image, pulled out of
+chipbook.ico - one drawing, one source. -->
+<link rel="apple-touch-icon" href="__ICON__">
+<meta name="color-scheme" content="light">
+<link rel="manifest" href="/manifest.json">
+<!-- Opening full screen, with no address bar - "like a normal app". -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="chipbook">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#13161b">
+<style>__STYLES__</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand" id="brand" role="button" tabindex="0"
+       title="Back to the home screen">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#f0762e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+    </svg>
+    <span>chipbook</span>
+  </div>
+
+  <div class="searchbox">
+    <div class="field-wrap">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6"></path>
+      </svg>
+      <textarea id="search-field" rows="1" autocomplete="off" spellcheck="false"
+                placeholder="Search by material, tool, notes…"></textarea>
+      <!-- THE CONVERSATION BAR IN PLACE OF THE SEARCH FIELD. Visible only in
+      AI mode, because there the search field does nothing anyway. It says
+      what you are talking about and how many questions have been asked;
+      a click opens the window. -->
+      <button type="button" class="bar-ai" id="bar-ai">
+        <svg class="spark" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"></path>
+        </svg>
+        <span class="what" id="ai-what">Conversation with the AI</span>
+        <span class="count" id="ai-count"></span>
+        <span class="back" id="ai-back">open ↓</span>
+      </button>
+    </div>
+    <button type="button" class="btn-search" id="btn-search">Search</button>
+  </div>
+
+  <div class="modes" id="modes">
+    <button type="button" data-mode="manual" class="chosen">By hand</button>
+    <button type="button" data-mode="ai">Ask the AI</button>
+  </div>
+
+  <div class="bar-right">
+    <span class="counter" id="counter"></span>
+    <!-- THE VERSION NUMBER WAS TAKEN OFF THE BAR on request - it took up
+    room and said nothing to somebody who is simply working. It STAYS in
+    the program: the server still gives it in /api/status, and the update
+    script prints "it was 1, it is 2". All that changed is that it does
+    not stand in view. -->
+    <!-- The address that gets typed into the phone. It stands in the
+    window, because since the program starts from an icon there is no
+    black window with this text. The figures alone, with no caption -
+    the caption is in the tooltip. Visible only on the computer the
+    program runs on. -->
+    <span class="counter phone-address" id="phone-address" hidden
+          title="type this address into the browser on your phone"></span>
+    <!-- The code is permanent - the phone types it once. This button serves
+    to CUT OFF: it draws the code anew and every phone has to identify
+    itself again. It is not for daily clicking. -->
+    <button class="btn btn-small" id="btn-new-code" hidden
+            title="draw a new code - every phone will have to type it again">New code</button>
+    <button class="btn btn-accent" id="btn-new">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      New entry
+    </button>
+  </div>
+</header>
+
+<div class="bar-alert" id="alarm" hidden></div>
+
+<main>
+  <section class="panel col-list">
+    <div class="heading-panel">
+      <!-- THE ARROW BACK TO THE CUSTOMER LIST. Without it a mistake in
+      choosing a customer cost two clicks and a detour through every job:
+      "All jobs", then "Customers" again. Going back is to be going back,
+      and not going out and coming in afresh. -->
+      <button type="button" class="btn btn-quiet" id="btn-back-customers"
+              title="Back to the customer list" hidden
+              aria-label="Back to the customer list">&#8592;</button>
+      <h2 id="list-heading">All jobs</h2>
+      <span class="count" id="results-count"></span>
+      <!-- CUSTOMERS. Not a separate page, but a second face of the same list:
+      you click "Customers", you see the customers, you click one - you are
+      back at the entries, but only theirs. A separate page would make you
+      go back to the list after every choice. -->
+      <button type="button" class="btn btn-quiet" id="btn-customers"
+              title="Show the customer list">Customers</button>
+    </div>
+    <div id="correction" class="correction" hidden></div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <section class="panel col-detail" id="right-column"></section>
+
+  <!-- THE AI CONVERSATION WINDOW. Until this change the chat sat
+  permanently in the left column, above the list, and pushed it down.
+  Now it is a window of its own: it folds away with a click beside it
+  and comes back with a click on the bar in the beam. Thanks to that
+  the jobs can be browsed WITHOUT breaking off the conversation - that
+  was asked for outright.
+  EVERY IDENTIFIER INSIDE STAYS AS IT WAS - only the parent changed. -->
+  <div class="ai-window" id="ai-window">
+    <div class="heading-ai">
+      <span class="title">
+        <svg class="spark" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"></path>
+        </svg>
+        Ask about your jobs
+      </span>
+      <button type="button" class="collapse" id="btn-collapse-ai"
+              title="Fold the conversation away (Esc)" aria-label="Fold the conversation away">&#8722;</button>
+    </div>
+    <div id="chat" class="chat" hidden>
+      <!-- THE "TALKING ABOUT:" BAR. It shows which job further questions go
+      to. The cross takes the pinning off and leaves the bubbles - for
+      clearing the conversation there is "Start over". -->
+      <div id="bar-conversation" class="bar-conversation" hidden></div>
+      <div id="answer-ai" class="answer-ai" hidden></div>
+      <div id="chat-field" class="chat-field" hidden>
+        <textarea id="chat-input" rows="2" spellcheck="false"
+                  placeholder="Write it in your own words…"></textarea>
+        <button type="button" id="chat-send">Send</button>
+        <button type="button" id="chat-new" class="quiet"
+                title="Start over, with no memory of the earlier questions">Start over</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- THE GATE FOR THE PHONE. It appears only when the page arrived with
+no token, that is from a device other than the laptop. -->
+<div class="gate" id="gate" hidden>
+  <div class="gate-box">
+    <h2>Type the code</h2>
+    <p>On the computer, in the chipbook window, click the
+       <b>New code</b> button at the top right - six digits will
+       appear. You type them once and the phone remembers them.</p>
+    <input id="gate-code" type="text" inputmode="numeric" maxlength="6"
+           autocomplete="off" placeholder="000000">
+    <button type="button" id="gate-ok">Enter</button>
+    <div class="gate-error_message" id="gate-error_message"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>__SCRIPT__</script>
+</body>
+</html>

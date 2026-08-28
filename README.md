@@ -4,7 +4,7 @@
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](pyproject.toml)
 [![dependencies](https://img.shields.io/badge/runtime%20dependencies-none-brightgreen.svg)](pyproject.toml)
-[![tests count](https://img.shields.io/badge/tests-555-blue.svg)](tests)
+[![tests count](https://img.shields.io/badge/tests-558-blue.svg)](tests)
 
 **A local catalogue of CNC jobs. The files stay where the workshop put
 them; the catalogue makes them findable again.**
@@ -35,7 +35,7 @@ file — came out of something that went wrong in use, and each one carries
 a test that says in its own words what would break without it.
 
 **In one line:** Python 3.9+, standard library only, one SQLite file,
-555 tests, no build step, no server to install, nothing leaves the
+558 tests, no build step, no server to install, nothing leaves the
 machine.
 
 ---
@@ -183,7 +183,7 @@ pip install -e ".[phone]"
 python -m unittest discover -s tests -p "test_*.py"
 ```
 
-555 tests, plain `unittest`, no test framework to install. They cover the
+558 tests, plain `unittest`, no test framework to install. They cover the
 things that break quietly — reading, writing, scanning, searching,
 migrating — and each one says in its own words what would go wrong
 without it.

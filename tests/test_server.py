@@ -332,6 +332,54 @@ class ServerTest(unittest.TestCase):
         self.assertEqual(content.count('id="version-small"'), 0,
                          "the number came back to the window bar")
 
+    def test_a_failure_of_the_model_does_not_look_like_an_answer(self):
+        """MEASURED ON A RUNNING PROGRAM, with the model pointed at a dead
+        port: the failure came into the conversation as an ordinary turn from
+        chipbook - the same class, the same colour, the same caption as an
+        answer. An outage read as something chipbook had said. That is the
+        same fault as an error message leaking into the window as an answer,
+        only quieter: nothing was broken and every test was green.
+        The rule meant to show it sat on the CONTAINER of the conversation,
+        where it can never fire, because a conversation is not one answer. It
+        belongs on the turn that failed.
+        THE CAPTION MATTERS AS MUCH AS THE COLOUR: on a phone held in
+        daylight, and for anybody who does not see this red as red, colour
+        alone says nothing."""
+        _, content = self.request("/", token=False)
+        # COUNTS AND NOT assertIn/assertNotIn ANYWHERE IN THIS TEST: either of
+        # those prints the WHOLE page on failure and floods the console so
+        # badly that it is not visible which test failed. Learned twice.
+        self.assertEqual(content.count(".answer-ai .bubble.failed{"), 1,
+                         "the failure has no look of its own")
+        self.assertEqual(content.count("chipbook could not answer"), 1,
+                         "the failure no longer says in words that it is one")
+        self.assertEqual(content.count(".answer-ai.error{"), 0,
+                         "the failure style went back onto the container, "
+                         "where it can never fire")
+
+    def test_every_failure_enters_the_conversation_through_one_place(self):
+        """TWO ROADS carry a failure into the conversation - a kind of "error"
+        from the API and an exception on the way - and a third is easy to add.
+        Any road that pushes a plain turn from chipbook dresses that failure
+        as an answer again, and nothing on the screen says otherwise. So the
+        mark is put in ONE function and this test watches that it stays one."""
+        _, content = self.request("/", token=False)
+        self.assertEqual(content.count("failed: true"), 1,
+                         "a turn is marked as failed somewhere other than "
+                         "pushFailure")
+        # once the definition, twice the call
+        self.assertEqual(content.count("pushFailure("), 3,
+                         "a road into the conversation was added or taken "
+                         "away")
+
+    def test_a_failure_is_never_folded(self):
+        """MEASURED: the message saying the model cannot be reached is 191
+        characters, and answers fold at 160. So the one message a person has
+        to read whole was the one shown in half, behind a button."""
+        _, content = self.request("/", token=False)
+        self.assertEqual(content.count("!w.expanded && !w.failed"), 1,
+                         "the folding limit stopped skipping failures")
+
     def test_question_whether_the_laptop_is_up_goes_to_api(self):
         """CAUGHT ON A PHONE. The first version asked for /manifest.json -
         that is, for a file the phone HAS in the stored copy. So it answered
